@@ -933,9 +933,30 @@ const muteIcon = document.getElementById('muteIcon');
 let audioMuted = false;
 let audioStarted = false;
 
-function startLandingAudio() { /* silent landing */ }
-function fadeInLandingAudio() { /* silent landing */ }
-function fadeOutLandingAudio() { if (!landingAudio) return; landingAudio.pause(); }
+function startLandingAudio() {
+  if (audioMuted || !landingAudio) return;
+  landingAudio.volume = 0;
+  landingAudio.play().catch(() => {});
+  let vol = 0;
+  const fadeIn = setInterval(() => {
+    vol = Math.min(vol + 0.02, 0.4);
+    landingAudio.volume = vol;
+    if (vol >= 0.4) clearInterval(fadeIn);
+  }, 50);
+}
+function fadeInLandingAudio() {
+  if (audioMuted) return;
+  startLandingAudio();
+}
+function fadeOutLandingAudio() {
+  if (!landingAudio) return;
+  let vol = landingAudio.volume;
+  const fade = setInterval(() => {
+    vol = Math.max(vol - 0.02, 0);
+    landingAudio.volume = vol;
+    if (vol <= 0) { clearInterval(fade); landingAudio.pause(); }
+  }, 40);
+}
 
 function updateMuteBtn() {
   if (!muteBtn || !muteIcon) return;
@@ -1038,6 +1059,7 @@ const __origReturnToLanding = window.returnToLanding;
 window.returnToLanding = function() {
   stopRoomAudio();
   if (__origReturnToLanding) __origReturnToLanding();
+  setTimeout(fadeInLandingAudio, 400);
 };
 
 const _setRoomForAudio = window.setRoom;
@@ -1048,6 +1070,16 @@ window.setRoom = function(roomName) {
 };
 
 if (homeLink) { homeLink.addEventListener('click', () => { setTimeout(fadeInLandingAudio, 500); }); }
+
+// Start landing audio on first user interaction
+let landingAudioStarted = false;
+function tryStartLandingAudio() {
+  if (landingAudioStarted || audioMuted || landingHidden) return;
+  landingAudioStarted = true;
+  startLandingAudio();
+}
+document.addEventListener('click', tryStartLandingAudio, { once: true });
+document.addEventListener('mousemove', tryStartLandingAudio, { once: true });
 
 updateMuteBtn();
 showLandingMode();
