@@ -454,199 +454,118 @@ const rugBorder = new THREE.Mesh(new THREE.PlaneGeometry(7.2, 5.6),
   new THREE.MeshStandardMaterial({ color: 0x6a1010, roughness: 0.92, side: THREE.DoubleSide }));
 rugBorder.rotation.x = -Math.PI / 2; rugBorder.position.set(0, 0.004, 1.2); scene.add(rugBorder);
 
-// ── PAINTING — sky background with abstract portrait ──
+// ── PAINTING — warm beige background with your line art portrait ──
 const paintCanvas = document.createElement('canvas');
 paintCanvas.width = 512; paintCanvas.height = 640;
 const pctx = paintCanvas.getContext('2d');
 
-// Sky background
-const skyGrad = pctx.createLinearGradient(0, 0, 0, 640);
-skyGrad.addColorStop(0, '#a8c8e8');
-skyGrad.addColorStop(0.4, '#c8dff0');
-skyGrad.addColorStop(1, '#d8eaf8');
-pctx.fillStyle = skyGrad;
-pctx.fillRect(0, 0, 512, 640);
+// Warm paper background like original
+const pbg = pctx.createLinearGradient(0,0,512,640);
+pbg.addColorStop(0,'#f5f0e8'); pbg.addColorStop(1,'#ede5d8');
+pctx.fillStyle = pbg; pctx.fillRect(0,0,512,640);
 
-// Clouds
-function drawCloud(cx, cy, rx, ry, alpha) {
-  pctx.globalAlpha = alpha;
-  pctx.fillStyle = '#e8f4ff';
-  pctx.beginPath(); pctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI*2); pctx.fill();
-  pctx.fillStyle = '#f0f8ff';
-  pctx.beginPath(); pctx.ellipse(cx-rx*0.35, cy+ry*0.2, rx*0.65, ry*0.75, 0, 0, Math.PI*2); pctx.fill();
-  pctx.beginPath(); pctx.ellipse(cx+rx*0.35, cy+ry*0.15, rx*0.6, ry*0.7, 0, 0, Math.PI*2); pctx.fill();
-  pctx.fillStyle = '#ffffff';
-  pctx.beginPath(); pctx.ellipse(cx, cy+ry*0.3, rx*0.8, ry*0.55, 0, 0, Math.PI*2); pctx.fill();
-  pctx.globalAlpha = 1;
-}
-drawCloud(150, 100, 90, 38, 0.75);
-drawCloud(370, 78, 72, 30, 0.7);
-drawCloud(260, 125, 50, 20, 0.55);
-
-// Sun
-pctx.globalAlpha = 0.65;
-pctx.fillStyle = '#ffe878';
-pctx.beginPath(); pctx.arc(430, 60, 38, 0, Math.PI*2); pctx.fill();
-pctx.globalAlpha = 0.2;
-pctx.beginPath(); pctx.arc(430, 60, 52, 0, Math.PI*2); pctx.fill();
-pctx.globalAlpha = 1;
-pctx.fillStyle = '#ffe060';
-pctx.beginPath(); pctx.arc(430, 60, 28, 0, Math.PI*2); pctx.fill();
-
-// Skin tone fill
-pctx.globalAlpha = 0.55;
-pctx.fillStyle = '#f0d8c8';
-pctx.beginPath();
-pctx.moveTo(182, 195);
-pctx.bezierCurveTo(180, 155, 196, 125, 216, 112);
-pctx.bezierCurveTo(238, 100, 256, 98, 262, 108);
-pctx.bezierCurveTo(280, 96, 306, 92, 326, 100);
-pctx.bezierCurveTo(360, 86, 400, 98, 415, 128);
-pctx.bezierCurveTo(430, 150, 426, 182, 415, 205);
-pctx.bezierCurveTo(406, 225, 395, 250, 388, 268);
-pctx.bezierCurveTo(375, 295, 355, 315, 330, 325);
-pctx.bezierCurveTo(312, 332, 290, 328, 274, 318);
-pctx.bezierCurveTo(252, 305, 235, 278, 226, 252);
-pctx.bezierCurveTo(215, 230, 188, 210, 182, 195);
-pctx.closePath();
-pctx.fill();
+// Subtle warm wash
+pctx.globalAlpha = 0.12;
+pctx.fillStyle = '#c8a870';
+pctx.beginPath(); pctx.ellipse(256,320,200,280,0,0,Math.PI*2); pctx.fill();
 pctx.globalAlpha = 1;
 
-// Hair lines — purple
-pctx.strokeStyle = '#7a50a0';
+// Line art — your abstract portrait drawing, colored
+// Main head oval
+pctx.strokeStyle = '#2a2018';
 pctx.lineWidth = 2.8;
 pctx.lineCap = 'round';
-pctx.globalAlpha = 0.85;
+pctx.lineJoin = 'round';
 pctx.beginPath();
-pctx.moveTo(162, 195);
-pctx.bezierCurveTo(158, 165, 172, 125, 198, 105);
-pctx.bezierCurveTo(225, 82, 262, 75, 296, 80);
-pctx.bezierCurveTo(330, 75, 365, 82, 388, 100);
-pctx.bezierCurveTo(415, 120, 428, 155, 425, 190);
+pctx.moveTo(256, 80);
+pctx.bezierCurveTo(340, 75, 390, 130, 385, 210);
+pctx.bezierCurveTo(380, 290, 330, 340, 256, 350);
+pctx.bezierCurveTo(182, 340, 132, 290, 127, 210);
+pctx.bezierCurveTo(122, 130, 172, 75, 256, 80);
 pctx.stroke();
-pctx.beginPath();
-pctx.moveTo(162, 195);
-pctx.bezierCurveTo(155, 208, 148, 225, 155, 245);
-pctx.stroke();
-pctx.globalAlpha = 1;
 
-// Left eye
-pctx.strokeStyle = '#3060a0';
+// Leaf/eye shape left — blue
+pctx.strokeStyle = '#3a6898';
 pctx.lineWidth = 2.2;
-pctx.globalAlpha = 0.75;
-pctx.fillStyle = '#b8d0f0';
+pctx.fillStyle = 'rgba(160,200,240,0.25)';
 pctx.beginPath();
-pctx.moveTo(196, 195);
-pctx.bezierCurveTo(208, 185, 228, 182, 248, 188);
-pctx.bezierCurveTo(264, 193, 272, 205, 268, 215);
-pctx.bezierCurveTo(264, 225, 248, 230, 232, 226);
-pctx.bezierCurveTo(215, 222, 200, 210, 196, 195);
+pctx.moveTo(148, 188);
+pctx.bezierCurveTo(175, 165, 225, 162, 258, 175);
+pctx.bezierCurveTo(225, 195, 175, 198, 148, 188);
 pctx.closePath();
-pctx.fill();
+pctx.fill(); pctx.stroke();
+
+// Leaf/eye shape right — blue
+pctx.beginPath();
+pctx.moveTo(258, 175);
+pctx.bezierCurveTo(290, 162, 340, 160, 368, 178);
+pctx.bezierCurveTo(340, 198, 290, 200, 258, 175);
+pctx.closePath();
+pctx.fill(); pctx.stroke();
+
+// Flowing line across — connecting both eyes (your distinctive cross line)
+pctx.strokeStyle = '#2a2018';
+pctx.lineWidth = 1.8;
+pctx.beginPath();
+pctx.moveTo(120, 182);
+pctx.bezierCurveTo(185, 170, 330, 168, 395, 180);
 pctx.stroke();
 
-// Right eye
+// Nose line — warm
+pctx.strokeStyle = '#8a6040';
+pctx.lineWidth = 1.6;
 pctx.beginPath();
-pctx.moveTo(300, 188);
-pctx.bezierCurveTo(315, 178, 338, 175, 358, 181);
-pctx.bezierCurveTo(375, 186, 385, 198, 380, 210);
-pctx.bezierCurveTo(375, 222, 358, 226, 340, 222);
-pctx.bezierCurveTo(322, 218, 305, 206, 300, 188);
-pctx.closePath();
-pctx.fill();
+pctx.moveTo(256, 195);
+pctx.bezierCurveTo(248, 230, 244, 258, 250, 272);
+pctx.bezierCurveTo(256, 282, 268, 282, 272, 272);
 pctx.stroke();
-pctx.globalAlpha = 1;
 
-// Pupils
-pctx.fillStyle = '#3060a0';
-pctx.globalAlpha = 0.65;
-pctx.beginPath(); pctx.arc(232, 208, 7, 0, Math.PI*2); pctx.fill();
-pctx.beginPath(); pctx.arc(345, 202, 7, 0, Math.PI*2); pctx.fill();
-pctx.fillStyle = '#88b8f0';
-pctx.globalAlpha = 0.85;
-pctx.beginPath(); pctx.arc(230, 206, 3, 0, Math.PI*2); pctx.fill();
-pctx.beginPath(); pctx.arc(343, 200, 3, 0, Math.PI*2); pctx.fill();
-pctx.globalAlpha = 1;
+// Lips — warm rose
+pctx.strokeStyle = '#c06858';
+pctx.lineWidth = 2;
+pctx.fillStyle = 'rgba(200,110,90,0.2)';
+pctx.beginPath();
+pctx.moveTo(220, 300);
+pctx.bezierCurveTo(235, 290, 256, 287, 268, 290);
+pctx.bezierCurveTo(280, 287, 296, 290, 308, 300);
+pctx.bezierCurveTo(296, 312, 280, 316, 268, 315);
+pctx.bezierCurveTo(256, 316, 235, 312, 220, 300);
+pctx.closePath();
+pctx.fill(); pctx.stroke();
 
-// Eyebrows — golden
-pctx.strokeStyle = '#a06828';
+// Long neck — your style, elongated
+pctx.strokeStyle = '#2a2018';
 pctx.lineWidth = 2.8;
-pctx.lineCap = 'round';
-pctx.globalAlpha = 0.8;
 pctx.beginPath();
-pctx.moveTo(196, 182);
-pctx.bezierCurveTo(212, 174, 235, 172, 252, 178);
+pctx.moveTo(226, 345);
+pctx.bezierCurveTo(218, 390, 210, 450, 212, 520);
+pctx.bezierCurveTo(214, 570, 220, 610, 222, 640);
 pctx.stroke();
 pctx.beginPath();
-pctx.moveTo(300, 175);
-pctx.bezierCurveTo(318, 166, 342, 166, 358, 172);
+pctx.moveTo(290, 350);
+pctx.bezierCurveTo(295, 395, 298, 460, 294, 530);
+pctx.bezierCurveTo(292, 578, 288, 615, 286, 640);
 pctx.stroke();
-pctx.globalAlpha = 1;
 
-// Nose
-pctx.strokeStyle = '#c87850';
+// Flowing hair lines — purple/violet
+pctx.strokeStyle = '#6a4488';
 pctx.lineWidth = 1.8;
-pctx.globalAlpha = 0.65;
-pctx.beginPath();
-pctx.moveTo(282, 235);
-pctx.bezierCurveTo(275, 255, 272, 275, 278, 288);
-pctx.bezierCurveTo(285, 298, 300, 302, 312, 298);
-pctx.stroke();
-pctx.globalAlpha = 1;
-
-// Lips
-pctx.fillStyle = '#e89080';
-pctx.strokeStyle = '#c05040';
-pctx.lineWidth = 1.8;
-pctx.globalAlpha = 0.75;
-pctx.beginPath();
-pctx.moveTo(270, 310);
-pctx.bezierCurveTo(280, 302, 295, 298, 308, 300);
-pctx.bezierCurveTo(320, 298, 335, 302, 345, 310);
-pctx.bezierCurveTo(335, 320, 320, 325, 308, 324);
-pctx.bezierCurveTo(295, 325, 278, 320, 270, 310);
-pctx.closePath();
-pctx.fill();
-pctx.stroke();
-pctx.beginPath();
-pctx.moveTo(272, 310);
-pctx.bezierCurveTo(290, 318, 325, 318, 344, 310);
-pctx.stroke();
-pctx.globalAlpha = 1;
-
-// Neck — purple
-pctx.strokeStyle = '#7a50a0';
-pctx.lineWidth = 2.5;
 pctx.globalAlpha = 0.7;
 pctx.beginPath();
-pctx.moveTo(295, 335);
-pctx.bezierCurveTo(288, 360, 282, 400, 285, 440);
-pctx.bezierCurveTo(287, 470, 292, 500, 295, 530);
+pctx.moveTo(256, 80);
+pctx.bezierCurveTo(200, 55, 140, 70, 110, 110);
+pctx.bezierCurveTo(88, 140, 95, 175, 120, 182);
 pctx.stroke();
 pctx.beginPath();
-pctx.moveTo(330, 335);
-pctx.bezierCurveTo(338, 360, 345, 400, 342, 440);
-pctx.bezierCurveTo(340, 470, 338, 500, 338, 530);
-pctx.stroke();
-pctx.globalAlpha = 1;
-
-// Body lower — orange
-pctx.strokeStyle = '#e87840';
-pctx.lineWidth = 3;
-pctx.globalAlpha = 0.65;
-pctx.beginPath();
-pctx.moveTo(295, 530);
-pctx.bezierCurveTo(292, 570, 290, 610, 292, 640);
-pctx.stroke();
-pctx.beginPath();
-pctx.moveTo(338, 530);
-pctx.bezierCurveTo(340, 570, 340, 610, 338, 640);
+pctx.moveTo(256, 80);
+pctx.bezierCurveTo(310, 55, 370, 65, 398, 105);
+pctx.bezierCurveTo(415, 130, 408, 165, 395, 180);
 pctx.stroke();
 pctx.globalAlpha = 1;
 
 // Frame
-pctx.strokeStyle = 'rgba(88, 120, 160, 0.5)';
-pctx.lineWidth = 12;
+pctx.strokeStyle = 'rgba(80,60,30,0.35)';
+pctx.lineWidth = 10;
 pctx.strokeRect(6, 6, 500, 628);
 
 const paintTex = new THREE.CanvasTexture(paintCanvas);
