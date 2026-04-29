@@ -1711,6 +1711,12 @@ function crossfadeToRoom(roomName) {
     });
   }, delay);
 }
+const roomAudioSrc = {
+  memory:     './Yosi-Horikawa-Fluid-320 copy.mp3',
+  pattern:    './Stephan-Bodzin-Singularity-320.mp3',
+  resistance: './Gidge-Fauna-Pt-II-320.mp3',
+  discomfort: './Rival-Consoles-Recovery-Vessels-Remix-320.mp3',
+};
 
 function startRoomAudio(roomName) {
   crossfadeToRoom(roomName);
