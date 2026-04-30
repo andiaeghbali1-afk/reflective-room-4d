@@ -122,7 +122,7 @@ const floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 22), floorMat);
 floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
 
 // Sky texture using TextureLoader
-const skyTex = new THREE.TextureLoader().load('./sky%20(wecompress.com).jpg');
+const skyTex = new THREE.TextureLoader().load('./sky.jpg');
 skyTex.wrapS = THREE.MirroredRepeatWrapping; skyTex.wrapT = THREE.ClampToEdgeWrapping;
 let skyOffset2 = 0, skyTimer = 0;
 function animateSky(dt) {
