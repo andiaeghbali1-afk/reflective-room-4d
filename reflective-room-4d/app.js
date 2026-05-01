@@ -158,6 +158,7 @@ function setNotebookRotation(angle) {
 }
 
 function centerNotebook() { setNotebookRotation(0); }
+function closeNotebook() { setNotebookRotation(118); }
 function notebookIsOpen() { return Math.abs(notebookRotation) < 55; }
 
 function updateNotebookIndicator() {
@@ -233,7 +234,8 @@ function setRoom(roomName) {
   }
   updateNotebook();
   updateNotebookIndicator();
-  centerNotebook();
+  closeNotebook();
+  setTimeout(() => { centerNotebook(); }, 600);
 }
 
 function enterFromLanding(roomName) {
@@ -332,7 +334,9 @@ function animatePageTurn(direction) {
   if (!pageTurnOverlay) return;
   pageTurnOverlay.classList.remove("flip-forward", "flip-backward");
   void pageTurnOverlay.offsetWidth;
-  pageTurnOverlay.classList.add(direction === "forward" ? "flip-forward" : "flip-backward");
+  setTimeout(() => {
+    pageTurnOverlay.classList.add(direction === "forward" ? "flip-forward" : "flip-backward");
+  }, 10);
 }
 
 function flipForward() {
