@@ -882,9 +882,7 @@ function renderDiaryView() {
       roomLabel.textContent = roomNames[roomKey];
       section.appendChild(roomLabel);
 
-      const text = pages.filter(p => p && p.trim()).join('
-
-');
+      const text = pages.filter(p => p && p.trim()).join('\n\n');
       const content = document.createElement('p');
       content.style.cssText = 'font-family:"neue-haas-grotesk-display","Helvetica Neue",Helvetica,sans-serif;font-size:1rem;line-height:1.75;color:#0e0a06;margin:0;white-space:pre-wrap;max-width:520px;';
       content.textContent = text;
