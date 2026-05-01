@@ -240,8 +240,15 @@ function enterFromLanding(roomName) {
   closeHowPanel();
   if (!document.getElementById(roomName)) { console.warn(`Missing room: ${roomName}`); return; }
   setTimeout(() => {
-    hideLandingMode();
-    window.setRoom(roomName);
+    try {
+      hideLandingMode();
+      window.setRoom(roomName);
+    } catch(e) {
+      console.error('setRoom error:', e);
+      // Still try basic room switch
+      document.querySelectorAll('.room').forEach(r => r.classList.toggle('active', r.id === roomName));
+      document.body.className = roomName + '-room';
+    }
     setTimeout(() => { if (fadeOverlay) fadeOverlay.classList.remove("active"); }, 220);
   }, 120);
 }
@@ -383,7 +390,7 @@ navLinks.forEach(link => {
   link.addEventListener("click", () => {
     if (link.id === "homeLink") return;
     if (!link.dataset.room) return;
-    setRoom(link.dataset.room);
+    window.setRoom(link.dataset.room);
   });
 });
 
