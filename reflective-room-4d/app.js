@@ -851,14 +851,24 @@ function renderDiaryView() {
   // Title
   const label = document.createElement('p');
   label.className = 'room-label';
-  label.textContent = 'YOUR PORTRAIT';
+  label.textContent = 'YOUR ARCHIVE';
   panel.appendChild(label);
 
   // Privacy note
   const privacyNote = document.createElement('div');
   privacyNote.style.cssText = 'font-size:0.82rem;color:rgba(14,10,6,0.45);line-height:1.6;margin-bottom:28px;max-width:480px;padding:12px 16px;border:1px solid rgba(14,10,6,0.10);border-radius:10px;background:rgba(14,10,6,0.03);';
-  privacyNote.innerHTML = '🔒 Your writing is stored only on your device. Nothing is uploaded or saved anywhere else.';
+  privacyNote.innerHTML = 'Your writing stays with you. No one else sees this.';
   panel.appendChild(privacyNote);
+
+  // Camera presence button
+  const camBtn = document.createElement('button');
+  camBtn.style.cssText = 'margin-bottom:24px;padding:9px 18px;border:1px solid rgba(14,10,6,0.18);background:transparent;border-radius:999px;font-family:"neue-haas-grotesk-text","Helvetica Neue",Helvetica,sans-serif;font-size:0.78rem;font-weight:600;color:rgba(14,10,6,0.55);cursor:pointer;letter-spacing:0.04em;transition:all 0.2s;display:block;';
+  camBtn.textContent = typeof streamActive !== 'undefined' && streamActive ? 'Hide Presence' : 'Show Presence';
+  camBtn.addEventListener('click', () => {
+    if (typeof toggleCamera === 'function') toggleCamera();
+    setTimeout(() => { camBtn.textContent = typeof streamActive !== 'undefined' && streamActive ? 'Hide Presence' : 'Show Presence'; }, 200);
+  });
+  panel.appendChild(camBtn);
 
   // Check if anything written
   const ROOMS_LIST = ['memory', 'pattern', 'resistance', 'discomfort'];
@@ -867,7 +877,7 @@ function renderDiaryView() {
   if (!hasContent) {
     const empty = document.createElement('p');
     empty.style.cssText = 'color:rgba(14,10,6,0.38);font-size:1rem;line-height:1.7;max-width:400px;';
-    empty.textContent = 'Nothing written yet. Visit a room and start writing — your words will appear here.';
+    empty.textContent = 'Nothing here yet. Go into a room and write something — it will appear here.';
     panel.appendChild(empty);
   } else {
     ROOMS_LIST.forEach(roomKey => {
