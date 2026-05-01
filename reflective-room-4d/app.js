@@ -856,19 +856,9 @@ function renderDiaryView() {
 
   // Privacy note
   const privacyNote = document.createElement('div');
-  privacyNote.style.cssText = 'font-size:0.82rem;color:rgba(14,10,6,0.45);line-height:1.6;margin-bottom:28px;max-width:480px;padding:12px 16px;border:1px solid rgba(14,10,6,0.10);border-radius:10px;background:rgba(14,10,6,0.03);';
+  privacyNote.style.cssText = 'font-size:0.8rem;color:rgba(14,10,6,0.38);line-height:1.6;margin-bottom:36px;max-width:480px;letter-spacing:0.01em;';
   privacyNote.innerHTML = 'Your writing stays with you. No one else sees this.';
   panel.appendChild(privacyNote);
-
-  // Camera presence button
-  const camBtn = document.createElement('button');
-  camBtn.style.cssText = 'margin-bottom:24px;padding:9px 18px;border:1px solid rgba(14,10,6,0.18);background:transparent;border-radius:999px;font-family:"neue-haas-grotesk-text","Helvetica Neue",Helvetica,sans-serif;font-size:0.78rem;font-weight:600;color:rgba(14,10,6,0.55);cursor:pointer;letter-spacing:0.04em;transition:all 0.2s;display:block;';
-  camBtn.textContent = typeof streamActive !== 'undefined' && streamActive ? 'Hide Presence' : 'Show Presence';
-  camBtn.addEventListener('click', () => {
-    if (typeof toggleCamera === 'function') toggleCamera();
-    setTimeout(() => { camBtn.textContent = typeof streamActive !== 'undefined' && streamActive ? 'Hide Presence' : 'Show Presence'; }, 200);
-  });
-  panel.appendChild(camBtn);
 
   // Check if anything written
   const ROOMS_LIST = ['memory', 'pattern', 'resistance', 'discomfort'];
@@ -877,7 +867,7 @@ function renderDiaryView() {
   if (!hasContent) {
     const empty = document.createElement('p');
     empty.style.cssText = 'color:rgba(14,10,6,0.38);font-size:1rem;line-height:1.7;max-width:400px;';
-    empty.textContent = 'Nothing here yet. Go into a room and write something — it will appear here.';
+    empty.textContent = 'Nothing here yet. Enter a room and write — your words will collect here.';
     panel.appendChild(empty);
   } else {
     ROOMS_LIST.forEach(roomKey => {
@@ -885,7 +875,7 @@ function renderDiaryView() {
       if (!pages || !pages.some(p => p && p.trim())) return;
 
       const section = document.createElement('div');
-      section.style.cssText = 'margin-bottom:32px;';
+      section.style.cssText = 'margin-bottom:40px;padding-bottom:32px;border-bottom:1px solid rgba(14,10,6,0.07);';
 
       const roomLabel = document.createElement('p');
       roomLabel.style.cssText = 'font-size:0.62rem;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:rgba(14,10,6,0.35);margin:0 0 10px;';
