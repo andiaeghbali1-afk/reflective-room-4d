@@ -444,7 +444,7 @@ function createOlivePlant(x,z,scale,t,d){
 }
 
 const plantLeft=createFicusPlant(-5.8,1.8,1.05,'Non-linear','You can begin with any room and move freely between them. There is no correct path.');
-const plantRight=createOlivePlant(5.4,1.2,1.0,'Anonymous','Nothing you write is recorded, stored, or shared. This space exists only for you, only now.');
+const plantRight=createOlivePlant(5.4,1.2,1.0,'Anonymous','Your writing is stored locally on your device and stays with you until you choose to clear it. Nothing is shared or uploaded.');
 
 const interactives=[...plaqueMeshes,tableTop,rug,paintMesh,paintFrame,
   ...plantLeft.children.filter(c=>c.isMesh),...plantRight.children.filter(c=>c.isMesh)];
