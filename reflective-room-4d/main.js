@@ -122,11 +122,15 @@ const floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 22), floorMat);
 floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
 
 // Sky texture using TextureLoader
-const skyTex = new THREE.TextureLoader().load('./sky.jpg');
+let skyLoaded = false;
+const skyTex = new THREE.TextureLoader().load('./sky.jpg',
+  () => { skyLoaded = true; }
+);
 skyTex.wrapS = THREE.MirroredRepeatWrapping; skyTex.wrapT = THREE.ClampToEdgeWrapping;
 let skyOffset2 = 0, skyTimer = 0;
 function animateSky(dt) {
-  skyTimer += dt; if (skyTimer > 0.05) { skyTimer = 0; skyOffset2 += 0.003; skyTex.offset.x = skyOffset2; skyTex.needsUpdate = true; }
+  if (!skyLoaded) return;
+  skyTimer += dt; if (skyTimer > 0.05) { skyTimer = 0; skyOffset2 += 0.003; skyTex.offset.x = skyOffset2; }
 }
 const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(18, 22),
   new THREE.MeshStandardMaterial({ map: skyTex, roughness: 1.0, metalness: 0.0 }));
