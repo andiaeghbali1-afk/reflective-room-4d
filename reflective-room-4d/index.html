@@ -58,7 +58,7 @@ body.camera-on .scanlines,body.camera-on .noise{opacity:1;}
 .btn-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px;}
 .top-gap{margin-top:28px;}
 .notebook-shell{position:absolute;right:3vw;top:50%;transform:translateY(-50%);width:min(39vw,620px);z-index:15;perspective:1800px;}
-.notebook-stage{width:100%;aspect-ratio:1.05/1;cursor:grab;user-select:none;touch-action:none;}
+.notebook-stage{width:100%;aspect-ratio:1.05/1;cursor:grab;user-select:none;touch-action:none;transition:transform 0.2s ease;}.notebook-stage:hover{transform:scale(1.012);}
 .notebook-stage.dragging{cursor:grabbing;}
 .notebook-object{position:relative;width:100%;height:100%;transform-style:preserve-3d;transform:rotateX(10deg) rotateY(var(--notebook-rotate,0deg));transition:transform 240ms ease;}
 .notebook-face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;}
@@ -267,12 +267,14 @@ body.about-room .mute-btn{border-color:rgba(14,10,6,0.16);background:rgba(14,10,
       <button class="how-close" id="howClose" type="button">&times;</button>
       <p class="how-kicker">How it works</p>
       <h2 class="how-title">Don't read. Explore.</h2>
-      <p class="how-text">Move through the room. Hover over the objects: the plants, the table, the signs above the doors. Each one holds something.</p>
-      <p class="how-text">When you find a room that calls to you, walk in.</p>
+      <p class="how-text">Move through the room. Hover over the objects — the plants, the table, the signs above the doors. Each one reacts, revealing something.</p>
+      <p class="how-text">Not everything shows itself at once.</p>
+      <p class="how-text">When you find a room that calls to you, walk in. Inside each room, open the notebook and write whatever comes up. There is no right way to respond.</p>
+      <p class="how-text">Your words stay on your device until you choose to clear them. Sound is part of the experience.</p>
       <hr class="how-divider" />
       <div class="how-private">
         <span class="how-private-icon">&#9675;</span>
-        <span class="how-private-text">Your writing is stored only on your device. Nothing is uploaded or saved anywhere else.</span>
+        <span class="how-private-text">Your writing stays with you. Nothing is uploaded or shared.</span>
       </div>
     </div>
 
@@ -391,5 +393,6 @@ body.about-room .mute-btn{border-color:rgba(14,10,6,0.16);background:rgba(14,10,
 
   <script type="module" src="./main.js"></script>
   <script src="./app.js"></script>
+  <div style="position:fixed;bottom:14px;right:20px;z-index:50;font-size:0.6rem;color:rgba(255,255,255,0.28);letter-spacing:0.04em;pointer-events:none;font-family:'neue-haas-grotesk-text','Helvetica Neue',Helvetica,sans-serif;text-align:right;line-height:1.5;max-width:260px;">Audio belongs to its respective artists<br>and is used for this student project.</div>
 </body>
 </html>
