@@ -99,14 +99,36 @@ function roomsVisited() {
   return sessionData.entryOrder.length;
 }
 
-const notebookPages = {
+// ── localStorage persistence ──────────────────────────────────────────────
+const STORAGE_KEY = 'reflective_rooms_v1';
+
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch(e) { return null; }
+}
+
+function saveToStorage() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      pages: notebookPages,
+      pageIndex: currentNotebookPage,
+    }));
+  } catch(e) {}
+}
+
+const _saved = loadFromStorage();
+
+const notebookPages = (_saved && _saved.pages) ? _saved.pages : {
   memory: [""],
   pattern: [""],
   resistance: [""],
   discomfort: [""]
 };
 
-const currentNotebookPage = {
+const currentNotebookPage = (_saved && _saved.pageIndex) ? _saved.pageIndex : {
   memory: 0,
   pattern: 0,
   resistance: 0,
@@ -711,6 +733,7 @@ roomInputs.forEach(input => {
     const roomName = input.dataset.room;
     notebookPages[roomName][currentNotebookPage[roomName]] = input.value;
     updateNotebook();
+    saveToStorage();
     trackKeystroke(roomName);
     if (e.inputType && e.inputType.startsWith('insert')) {
       showEffects();
@@ -782,6 +805,7 @@ submitButtons.forEach(btn => {
     notebookPages[roomName][currentNotebookPage[roomName]] = value;
     input.value = "";
     updateNotebook();
+    saveToStorage();
   });
 });
 
@@ -793,7 +817,7 @@ clearButtons.forEach(btn => {
     const room = document.getElementById(roomName);
     const input = room ? room.querySelector(".room-input") : null;
     if (input) input.value = "";
-    updateNotebook(); centerNotebook();
+    updateNotebook(); saveToStorage(); centerNotebook();
   });
 });
 
@@ -805,106 +829,83 @@ if (clearAllBtn) {
   });
 }
 
-const inlineHint = document.getElementById('portraitInlineHint');
-const inlineText = document.getElementById('portraitInlineText');
+// ── Portrait removed — replaced with diary view ──
+// About room now shows saved writings summary
 
-function avgGap(gaps) {
-  if (!gaps.length) return null;
-  return gaps.reduce((a, b) => a + b, 0) / gaps.length;
-}
-
-function generatePortrait() {
-  if (_trackCurrentRoom) trackLeaveRoom(_trackCurrentRoom);
-  const sd = sessionData;
-  const rooms = ROOMS.filter(r => sd.entryOrder.includes(r));
-  const first = sd.entryOrder[0];
-  const last = sd.entryOrder[sd.entryOrder.length - 1];
-  const byTime = [...rooms].sort((a, b) => sd.timeSpent[b] - sd.timeSpent[a]);
-  const mostTime = byTime[0];
-  const byWords = [...rooms].sort((a, b) => sd.wordCount[b] - sd.wordCount[a]);
-  const mostWords = byWords[0];
-  const rhythms = {};
-  rooms.forEach(r => { rhythms[r] = avgGap(sd.keystrokeGaps[r]); });
-  const validRhythms = rooms.filter(r => rhythms[r] !== null);
-  const slowest = validRhythms.sort((a, b) => rhythms[b] - rhythms[a])[0];
-  const fastest = validRhythms.sort((a, b) => rhythms[a] - rhythms[b])[0];
-  const returned = rooms.filter(r => sd.returnVisits[r] > 0);
-  const totalWords = rooms.reduce((s, r) => s + sd.wordCount[r], 0);
+function renderDiaryView() {
   const roomNames = { memory: 'Memory', pattern: 'Pattern', resistance: 'Resistance', discomfort: 'Discomfort' };
-  function rnd(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-  const sentences = [];
-  const entrySentences = {
-    memory: ["Memory was the first place you went.", "You moved toward Memory before anywhere else.", "Something in Memory called you in first."],
-    pattern: ["You began with Pattern.", "Pattern was the first room you entered.", "You went to Pattern first. before you knew what was waiting."],
-    resistance: ["You walked into Resistance first.", "Resistance was where you chose to start.", "You didn't avoid Resistance. you went there first."],
-    discomfort: ["You opened Discomfort before anything else.", "Discomfort was the first room you entered.", "You went straight toward Discomfort."],
-  };
-  if (first) sentences.push(rnd(entrySentences[first]));
-  if (mostTime && mostWords && mostTime === mostWords) {
-    sentences.push(rnd([`${roomNames[mostTime]} held you the longest. and your words gathered there too.`, `You lingered in ${roomNames[mostTime]}. It's also where the most came out.`, `Something in ${roomNames[mostTime]} kept you. The writing collected there.`]));
-  } else if (mostTime) {
-    sentences.push(rnd([`You lingered longest in ${roomNames[mostTime]}.`, `${roomNames[mostTime]} was where you stayed.`, `Time moved differently in ${roomNames[mostTime]}. you were there the longest.`]));
-    if (mostWords && mostWords !== mostTime) sentences.push(rnd([`Your words gathered more in ${roomNames[mostWords]}, though.`, `But it was ${roomNames[mostWords]} where the writing opened up.`, `${roomNames[mostWords]} is where language came more easily.`]));
-  }
-  if (slowest && fastest && slowest !== fastest) {
-    const rhythmPhrases = {
-      memory_slow: ["In Memory, something slowed you. the words arrived carefully, one at a time.", "Memory asked more of you. The writing there came slowly.", "There was a hesitation in Memory, like something needed to be approached gently."],
-      pattern_slow: ["In Pattern, you paused more between words.", "Something in Pattern made the writing slower, more deliberate.", "Pattern held you at a different pace. less certain, more searching."],
-      resistance_slow: ["Resistance was where your writing slowed the most.", "The words in Resistance came out reluctantly.", "In Resistance, something made you pause. harder to name, harder to place."],
-      discomfort_slow: ["Discomfort asked the most of you. Your writing there was the most careful.", "In Discomfort, the words came slowly. like each one cost something.", "Your writing slowed deepest in Discomfort."],
-      memory_fast: ["Memory moved quickly under your hands. like something needed to get out.", "In Memory, the writing arrived fast, almost urgently.", "Something in Memory wanted to be said quickly."],
-      pattern_fast: ["Pattern came out fast. like you already knew what you wanted to say.", "In Pattern, you wrote with an urgency that wasn't there elsewhere.", "Your writing in Pattern had a momentum to it."],
-      resistance_fast: ["Resistance came out faster than you might have expected.", "In Resistance, something poured out quickly.", "Your writing moved fast in Resistance. maybe more than you planned."],
-      discomfort_fast: ["Discomfort moved through you quickly. faster than anywhere else.", "In Discomfort, the writing came fast, like something had been waiting.", "You wrote through Discomfort quickly."],
-    };
-    sentences.push(rnd(rhythmPhrases[`${slowest}_slow`] || [`Something slowed you in ${roomNames[slowest]}.`]));
-  }
-  if (returned.length > 0) {
-    const r = returned[0];
-    sentences.push(rnd([`You came back to ${roomNames[r]}.`, `${roomNames[r]} drew you back. something there wasn't quite finished.`, `Of all the rooms, ${roomNames[r]} was the one you returned to.`, `You left ${roomNames[r]} and then went back. Something stayed with you.`]));
-  }
-  if (last !== first && rooms.length > 1) sentences.push(rnd([`You ended in ${roomNames[last]}.`, `${roomNames[last]} was the last place you were.`, `You closed in ${roomNames[last]}.`]));
-  if (totalWords === 0) sentences.push(rnd(["You moved through the rooms without leaving anything behind.", "Nothing was written. but you were here, and that's its own kind of presence.", "You looked without writing. That says something too."]));
-  else if (totalWords < 20) sentences.push(rnd(["Only a few words made it onto the page. The rest stayed inside.", "You wrote carefully. not much, but chosen.", "Not everything needed to be said. A few words were enough."]));
-  else if (totalWords < 60) sentences.push(rnd(["Some things found their way onto the page. Others didn't need to.", "You wrote enough to say something. not everything, but something.", "The writing was measured. Considered."]));
-  else sentences.push(rnd(["A lot came out. Whatever you carried in here, most of it found words.", "The pages filled. Something in this space gave you room to say it.", "You wrote through it. a lot of it. That takes something."]));
-  return sentences.join(' ');
-}
+  const aboutSection = document.getElementById('about');
+  const panel = aboutSection ? aboutSection.querySelector('.panel') : null;
+  if (!panel) return;
 
-let portraitRendered = false;
+  // Clear existing content
+  panel.innerHTML = '';
 
-function renderInlinePortrait() {
-  if (!inlineText) return;
-  if (inlineText) inlineText.style.color = '#0e0a06';
-  if (inlineHint) inlineHint.style.color = 'rgba(14,10,6,0.42)';
-  const anonNote = document.querySelector('.portrait-inline-anon');
-  if (anonNote) anonNote.style.color = 'rgba(14,10,6,0.28)';
-  const roomLabel = document.querySelector('#about .room-label');
-  if (roomLabel) roomLabel.style.color = 'rgba(14,10,6,0.30)';
-  if (roomsVisited() < 2) {
-    if (inlineHint) inlineHint.style.display = 'block';
-    inlineText.style.display = 'none';
-    return;
+  // Title
+  const label = document.createElement('p');
+  label.className = 'room-label';
+  label.textContent = 'YOUR PORTRAIT';
+  panel.appendChild(label);
+
+  // Privacy note
+  const privacyNote = document.createElement('div');
+  privacyNote.style.cssText = 'font-size:0.82rem;color:rgba(14,10,6,0.45);line-height:1.6;margin-bottom:28px;max-width:480px;padding:12px 16px;border:1px solid rgba(14,10,6,0.10);border-radius:10px;background:rgba(14,10,6,0.03);';
+  privacyNote.innerHTML = '🔒 Your writing is stored only on your device. Nothing is uploaded or saved anywhere else.';
+  panel.appendChild(privacyNote);
+
+  // Check if anything written
+  const ROOMS_LIST = ['memory', 'pattern', 'resistance', 'discomfort'];
+  const hasContent = ROOMS_LIST.some(r => notebookPages[r] && notebookPages[r].some(p => p && p.trim()));
+
+  if (!hasContent) {
+    const empty = document.createElement('p');
+    empty.style.cssText = 'color:rgba(14,10,6,0.38);font-size:1rem;line-height:1.7;max-width:400px;';
+    empty.textContent = 'Nothing written yet. Visit a room and start writing — your words will appear here.';
+    panel.appendChild(empty);
+  } else {
+    ROOMS_LIST.forEach(roomKey => {
+      const pages = notebookPages[roomKey];
+      if (!pages || !pages.some(p => p && p.trim())) return;
+
+      const section = document.createElement('div');
+      section.style.cssText = 'margin-bottom:32px;';
+
+      const roomLabel = document.createElement('p');
+      roomLabel.style.cssText = 'font-size:0.62rem;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:rgba(14,10,6,0.35);margin:0 0 10px;';
+      roomLabel.textContent = roomNames[roomKey];
+      section.appendChild(roomLabel);
+
+      const text = pages.filter(p => p && p.trim()).join('
+
+');
+      const content = document.createElement('p');
+      content.style.cssText = 'font-family:"neue-haas-grotesk-display","Helvetica Neue",Helvetica,sans-serif;font-size:1rem;line-height:1.75;color:#0e0a06;margin:0;white-space:pre-wrap;max-width:520px;';
+      content.textContent = text;
+      section.appendChild(content);
+
+      panel.appendChild(section);
+    });
   }
-  if (inlineHint) inlineHint.style.display = 'none';
-  inlineText.style.display = 'block';
-  inlineText.textContent = '';
-  const text = generatePortrait();
-  portraitRendered = true;
-  const sentences = text.match(/[^.!?]+[.!?]+\s*/g) || [text];
-  let i = 0;
-  function revealNext() {
-    if (i >= sentences.length) return;
-    const span = document.createElement('span');
-    span.className = 'portrait-sentence';
-    span.textContent = sentences[i].trim() + ' ';
-    span.style.color = '#0e0a06';
-    inlineText.appendChild(span);
-    setTimeout(() => span.classList.add('visible'), 30);
-    i++;
-    setTimeout(revealNext, 950);
-  }
-  setTimeout(revealNext, 300);
+
+  // Clear all button
+  const clearWrap = document.createElement('div');
+  clearWrap.style.cssText = 'margin-top:32px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;';
+
+  const clearAllBtn2 = document.createElement('button');
+  clearAllBtn2.style.cssText = 'padding:10px 20px;border:1px solid rgba(14,10,6,0.18);background:transparent;border-radius:999px;font-family:"neue-haas-grotesk-text","Helvetica Neue",Helvetica,sans-serif;font-size:0.78rem;font-weight:600;color:rgba(14,10,6,0.50);cursor:pointer;letter-spacing:0.04em;transition:all 0.2s;';
+  clearAllBtn2.textContent = 'Clear all writing';
+  clearAllBtn2.addEventListener('mouseenter', () => { clearAllBtn2.style.color = '#c00'; clearAllBtn2.style.borderColor = 'rgba(180,0,0,0.3)'; });
+  clearAllBtn2.addEventListener('mouseleave', () => { clearAllBtn2.style.color = 'rgba(14,10,6,0.50)'; clearAllBtn2.style.borderColor = 'rgba(14,10,6,0.18)'; });
+  clearAllBtn2.addEventListener('click', () => {
+    if (!confirm('Clear all writing from all rooms? This cannot be undone.')) return;
+    ROOMS_LIST.forEach(key => { notebookPages[key] = [""]; currentNotebookPage[key] = 0; });
+    roomInputs.forEach(input => { input.value = ""; });
+    updateNotebook();
+    saveToStorage();
+    renderDiaryView();
+  });
+  clearWrap.appendChild(clearAllBtn2);
+  panel.appendChild(clearWrap);
 }
 
 const _setRoomBeforePortrait = window.setRoom;
@@ -913,7 +914,7 @@ window.setRoom = function(roomName) {
   if (roomName === 'about') {
     const aboutSection = document.getElementById('about');
     if (aboutSection) { aboutSection.style.background = '#f8f6f2'; aboutSection.style.color = '#0e0a06'; }
-    setTimeout(renderInlinePortrait, 200);
+    setTimeout(renderDiaryView, 200);
   }
 };
 
