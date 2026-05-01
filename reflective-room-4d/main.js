@@ -373,7 +373,7 @@ const paintFrame=new THREE.Mesh(new THREE.BoxGeometry(2.0,2.5,0.08),new THREE.Me
 paintFrame.position.set(-6.1,3.2,-1.5);paintFrame.rotation.y=Math.PI/2;paintFrame.castShadow=true;scene.add(paintFrame);
 const paintMesh=new THREE.Mesh(new THREE.PlaneGeometry(1.8,2.3),new THREE.MeshStandardMaterial({map:paintTex,roughness:0.8}));
 paintMesh.position.set(-6.05,3.2,-1.5);paintMesh.rotation.y=Math.PI/2;scene.add(paintMesh);
-paintMesh.userData=paintFrame.userData={type:'painting',title:'Your Portrait',desc:'Visit at least two rooms, then go to About. A reflection of how you moved through this space will appear.'};
+paintMesh.userData=paintFrame.userData={type:'painting',title:'Your Portrait',desc:'Your writings from each room, kept only on your device.'};
 
 function createFicusPlant(x,z,scale,t,d){
   const g=new THREE.Group();g.position.set(x,0,z);g.userData={type:'plant',title:t,desc:d};
