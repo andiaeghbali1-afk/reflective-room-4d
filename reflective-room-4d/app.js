@@ -241,7 +241,7 @@ function enterFromLanding(roomName) {
   if (!document.getElementById(roomName)) { console.warn(`Missing room: ${roomName}`); return; }
   setTimeout(() => {
     hideLandingMode();
-    setRoom(roomName);
+    window.setRoom(roomName);
     setTimeout(() => { if (fadeOverlay) fadeOverlay.classList.remove("active"); }, 220);
   }, 120);
 }
@@ -918,11 +918,7 @@ window.setRoom = function(roomName) {
   }
 };
 
-const portraitClose = document.getElementById('portraitClose');
-const portraitOverlay = document.getElementById('portraitOverlay');
-if (portraitClose) portraitClose.addEventListener('click', () => {
-  if (portraitOverlay) { portraitOverlay.classList.remove('active'); portraitOverlay.setAttribute('aria-hidden', 'true'); }
-});
+// Portrait overlay removed — diary view replaces it
 
 /* ═══════════════════════════════════════════════════
    AUDIO SYSTEM
