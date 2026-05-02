@@ -234,10 +234,9 @@ function setRoom(roomName) {
   updateNotebook();
   updateNotebookIndicator();
   centerNotebook();
-  // Start notebook closed, then open
+  // Start notebook closed, open on click or after delay
   if (notebookShell) {
     notebookShell.classList.add('nb-closed');
-    setTimeout(() => { notebookShell.classList.remove('nb-closed'); }, 400);
   }
 }
 
