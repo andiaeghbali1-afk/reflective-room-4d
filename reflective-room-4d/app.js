@@ -234,6 +234,11 @@ function setRoom(roomName) {
   updateNotebook();
   updateNotebookIndicator();
   centerNotebook();
+  // Start notebook closed, then open
+  if (notebookShell) {
+    notebookShell.classList.add('nb-closed');
+    setTimeout(() => { notebookShell.classList.remove('nb-closed'); }, 400);
+  }
 }
 
 function enterFromLanding(roomName) {
@@ -407,6 +412,14 @@ presenceToggles.forEach(btn => { btn.addEventListener("click", toggleCamera); })
 
 if (notebookLeftPage) { notebookLeftPage.addEventListener("click", () => { if (!dragMoved) flipBackward(); }); }
 if (notebookRightPage) { notebookRightPage.addEventListener("click", () => { if (!dragMoved) flipForward(); }); }
+
+if (notebookShell) {
+  notebookShell.addEventListener('click', (e) => {
+    if (notebookShell.classList.contains('nb-closed')) {
+      notebookShell.classList.remove('nb-closed');
+    }
+  });
+}
 
 if (notebookStage) {
   notebookStage.addEventListener("pointerdown", startNotebookDrag);
