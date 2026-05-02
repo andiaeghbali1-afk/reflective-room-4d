@@ -158,7 +158,6 @@ function setNotebookRotation(angle) {
 }
 
 function centerNotebook() { setNotebookRotation(0); }
-function closeNotebook() { setNotebookRotation(118); }
 function notebookIsOpen() { return Math.abs(notebookRotation) < 55; }
 
 function updateNotebookIndicator() {
@@ -234,8 +233,7 @@ function setRoom(roomName) {
   }
   updateNotebook();
   updateNotebookIndicator();
-  closeNotebook();
-  setTimeout(() => { centerNotebook(); }, 600);
+  centerNotebook();
 }
 
 function enterFromLanding(roomName) {
