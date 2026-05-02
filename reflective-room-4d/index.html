@@ -64,7 +64,11 @@ body.camera-on .scanlines,body.camera-on .noise{opacity:1;}
 .notebook-face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
 .notebook-face.cover-face{display:none !important;}
 .notebook-face.back-face{display:none !important;}
-.notebook-face.spread-face{display:flex;}
+.notebook-face.spread-face{display:flex;transition:opacity 0.6s ease,transform 0.6s cubic-bezier(0.22,1,0.36,1);}
+/* Closed state */
+.notebook-shell.nb-closed .spread-face{opacity:0;transform:scaleX(0.05);pointer-events:none;}
+.notebook-shell.nb-closed .cover-face{display:flex !important;}
+.notebook-shell.nb-closed .cover-face .book-cover{cursor:pointer;}
 .book-cover{position:relative;width:74%;height:92%;overflow:hidden;border-radius:6px 16px 16px 6px;background:linear-gradient(90deg,rgba(255,255,255,0.05),rgba(255,255,255,0) 12%,rgba(255,255,255,0.06) 30%,rgba(0,0,0,0.1) 74%,rgba(0,0,0,0.18)),linear-gradient(180deg,#5c5b60,#3e3d43 55%,#2d2b30);box-shadow:0 30px 60px rgba(0,0,0,0.32),inset 0 0 0 1px rgba(255,255,255,0.06),inset 0 0 35px rgba(255,255,255,0.05);}
 .cover-title,.back-title{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:rgba(230,230,230,0.76);font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.2rem,2vw,1.7rem);letter-spacing:0.02em;text-transform:lowercase;}
 .spread-wrap{position:relative;width:95%;height:86%;transform-style:preserve-3d;}
@@ -395,6 +399,6 @@ body.about-room .mute-btn{border-color:rgba(14,10,6,0.16);background:rgba(14,10,
   <script src="./app.js"></script>
   <div style="position:fixed;bottom:14px;right:20px;z-index:50;font-size:0.6rem;color:rgba(255,255,255,0.28);letter-spacing:0.04em;pointer-events:none;font-family:'neue-haas-grotesk-text','Helvetica Neue',Helvetica,sans-serif;text-align:right;line-height:1.5;max-width:260px;">Audio belongs to its respective artists<br>and is used for this student project.</div>
 
-  <div style="position:fixed;bottom:0;left:0;right:0;z-index:500;padding:8px 20px;font-family:'neue-haas-grotesk-text','Helvetica Neue',Helvetica,sans-serif;font-size:0.62rem;font-weight:500;color:rgba(255,255,255,0.80);background:rgba(0,0,0,0.50);letter-spacing:0.04em;pointer-events:none;text-align:center;">Brian Eno &nbsp;·&nbsp; Yosi Horikawa &nbsp;·&nbsp; Stephan Bodzin &nbsp;·&nbsp; Gidge &nbsp;·&nbsp; Rival Consoles &nbsp;— used for this student project</div>
+  <div style="position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:500;font-family:'neue-haas-grotesk-text','Helvetica Neue',Helvetica,sans-serif;font-size:0.6rem;font-weight:400;color:rgba(0,0,0,0.35);letter-spacing:0.05em;pointer-events:none;text-align:center;white-space:nowrap;">Brian Eno &nbsp;·&nbsp; Yosi Horikawa &nbsp;·&nbsp; Stephan Bodzin &nbsp;·&nbsp; Gidge &nbsp;·&nbsp; Rival Consoles &nbsp;— used for this student project</div>
 </body>
 </html>
